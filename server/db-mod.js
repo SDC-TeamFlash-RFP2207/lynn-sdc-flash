@@ -12,9 +12,11 @@ pool.connect();
 
 module.exports = {
 
-  getQs: pool.query("SELECT json_agg(q) FROM q", (err, res) => {
-    console.log(err, res);
-  }),
+  getQs: (req) => {
+    //   pool.query("SELECT json_agg(q) FROM q", (err, res) => {
+    //   console.log(err, res);
+    // })
+  },
 
   getAs: pool.query("SELECT json_agg(a) FROM a", (err, res) => {
     console.log(err, res);
