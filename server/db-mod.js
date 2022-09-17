@@ -13,7 +13,6 @@ pool.connect();
 module.exports = {
 
   getQs: (req) => {
-    console.log("models.getQs works");
     //   pool.query("SELECT json_agg(q) FROM q", (err, res) => {
     //   console.log(err, res);
     // })
