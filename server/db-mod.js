@@ -14,28 +14,27 @@ module.exports = {
 
   getQs: (req) => {
     console.log("models.getQs works");
-    //   pool.query("SELECT json_agg(q) FROM q", (err, res) => {
-    //   console.log(err, res);
-    // })
+    return pool.query(`SELECT * FROM q LIMIT 3`);
   },
 
-  getAs: pool.query("SELECT json_agg(a) FROM a", (err, res) => {
-    console.log(err, res);
-  }),
+  getAs: (req) => {
+    // **** this should not return anything that has been reported. **** \\
+    return pool.query("SELECT * FROM a LIMIT 3")
+  },
 
-  getPhotos: pool.query("SELECT json_agg(a_photos) FROM a_photos", (err, res) => {
-    console.log(err, res);
-  }),
+  // getPhotos: pool.query("SELECT * FROM a_photos", (err, res) => {
+  //   console.log(err, res);
+  // }),
 
-  postQ: pool.query("", (err, res) => {
-    console.log(err, res);
-  }),
+  // postQ: pool.query("", (err, res) => {
+  //   console.log(err, res);
+  // }),
 
-  postA: pool.query("", (err, res) => {
-    console.log(err, res);
-  }),
+  // postA: pool.query("", (err, res) => {
+  //   console.log(err, res);
+  // }),
 
-  postPhoto: pool.query("", (err, res) => {
-    console.log(err, res);
-  }),
+  // postPhoto: pool.query("", (err, res) => {
+  //   console.log(err, res);
+  // }),
 }
