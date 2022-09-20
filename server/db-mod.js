@@ -50,14 +50,15 @@ module.exports = {
     FROM
       (SELECT
         *,
-        json_agg(a_photos) as photos
+        COALESCE ((
+          SELECT json_agg(
+            json_build_object(
+              'answer_id', answer_id,
+              'url', url
+            ))
+          FROM a_photos
+          WHERE answer_id = 5), '[]'::json) AS photos
       FROM
-        (select
-          answer_id,
-          url
-        from
-          a_photos
-       where answer_id = 5)
         a
       WHERE
         question_id = ${ question_id }
@@ -67,8 +68,6 @@ module.exports = {
       a`;
 
     return pool.query(query);
-
-
   },
 
 
