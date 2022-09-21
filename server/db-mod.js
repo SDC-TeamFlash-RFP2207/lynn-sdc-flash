@@ -39,7 +39,6 @@ module.exports = {
   getAs: (req) => { /* returns list of unreported answers and photos that correspond to a question id */
     console.log('models.getAs success!');
     const { question_id, page=0, count=5} = req;
-    console.log(req);
 
     let query =
     `SELECT
@@ -73,33 +72,123 @@ module.exports = {
 
   postQ: (req) => {
     console.log('models.postQ success!');
-    return pool.query(`INSERT INTO q(q_id, product_id, q_body, date, username, user_email, reported, helpful_count) VALUES( *** !! figure this shizz out !! *** )`);
+    const { body, name, email, product_id } = req;
+
+    let query =
+    `INSERT INTO
+      q
+      (product_id,
+      q_body,
+      username,
+      user_email,
+      date,
+      reported,
+      helpful_count)
+    VALUES
+      ($1,
+      $2,
+      $3,
+      $4,
+      NOW(),
+      0,
+      0)`
+
+      const data = [product_id, body, name, email];
+
+    return pool.query(query, data);
   },
 
   postA: (req) => {
-    // how to add photos as well?
     console.log('models.postA success!');
-    return pool.query(`INSERT INTO a(a_id, question_id, a_body, date, username, user_email, reported, helpful_count) VALUES( *** !! figure this shizz out !! *** )`);
+    const { body, name, email } = req.body;
+    const { question_id } = req.params
+
+    let query =
+    `INSERT INTO
+      a
+      (question_id,
+      a_body,
+      username,
+      user_email,
+      date,
+      reported,
+      helpful_count)
+    VALUES
+      ($1,
+      $2,
+      $3,
+      $4,
+      NOW(),
+      0,
+      0)
+    RETURNING
+      a_id`;
+
+      const data = [question_id, body, name, email];
+
+    return pool.query(query, data);
+  },
+
+  postPhotos: (arr) => {
+    console.log('models.postPhotos Success!');
+
+    let query =
+      `INSERT INTO
+        a_photos
+        (answer_id,
+        url)
+      VALUES
+        ($1,
+        $2)`;
+
+    return pool.query(query, arr);
   },
 
   putQHelp: (req) => {
+    const { question_id } = req;
     console.log('models.putQHelp success!');
-    return pool.query(`INSERT INTO q(q_id, product_id, q_body, date, username, user_email, reported, helpful_count) VALUES( *** !! figure this shizz out !! *** )`);
+
+    let query =
+      `UPDATE q
+      SET helpful_count = helpful_count + 1
+      WHERE q_id = ${question_id};`
+
+    return pool.query(query);
   },
 
   putQR: (req) => {
+    const { question_id } = req;
     console.log('models.putQR success!');
-    return pool.query(`INSERT INTO q(q_id, product_id, q_body, date, username, user_email, reported, helpful_count) VALUES( *** !! figure this shizz out !! *** )`);
+
+    let query =
+      `UPDATE q
+      SET reported = reported + 1
+      WHERE q_id = ${question_id};`;
+
+    return pool.query(query);
   },
 
   putAHelp: (req) => {
+    const { answer_id } = req;
     console.log('models.putAHelp success!');
-    return pool.query(`INSERT INTO a(a_id, question_id, a_body, date, username, user_email, reported, helpful_count) VALUES( *** !! figure this shizz out !! *** )`);
+
+    let query =
+      `UPDATE a
+      SET helpful_count = helpful_count + 1
+      WHERE a_id = ${answer_id};`;
+    return pool.query(query);
   },
 
   putAR: (req) => {
+    const { answer_id } = req;
     console.log('models.putAR success!');
-    return pool.query(`INSERT INTO a(a_id, question_id, a_body, date, username, user_email, reported, helpful_count) VALUES( *** !! figure this shizz out !! *** )`);
+
+    let query =
+    `UPDATE a
+    SET reported = reported + 1
+    WHERE a_id = ${answer_id};`;
+
+    return pool.query(query);
   },
 
 }
