@@ -56,7 +56,7 @@ module.exports = {
               'url', url
             ))
           FROM a_photos
-          WHERE answer_id = 5), '[]'::json) AS photos
+          WHERE answer_id = a_id), '[]'::json) AS photos
       FROM
         a
       WHERE
